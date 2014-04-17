@@ -29,6 +29,7 @@ public class InvadersGameFrame extends JFrame{
     }
     */
     private void init(){
+
         Color rightPanelColor = Color.white;
         Font f = new Font("Dialog", Font.BOLD, 20);
 
