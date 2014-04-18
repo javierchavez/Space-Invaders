@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
  */
 public class InvadersGameFrame extends JFrame{
     private boolean isRunning = false;
-    private JPanel gameArea = new JPanel();
+    private GameAreaPanel gameArea = new GameAreaPanel();
     private JButton startPauseButton;
     private JLabel scoreLabel, aliensLabel, livesLabel;
 
@@ -73,7 +73,7 @@ public class InvadersGameFrame extends JFrame{
         });
 
         //create a panel to show main game with black background
-        gameArea.setBackground(Color.BLACK);
+//        gameArea.setBackground(Color.BLACK);
 
 
         Container pane = this.getContentPane();

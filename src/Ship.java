@@ -1,3 +1,4 @@
+import java.awt.*;
 
 /**
  * @author Javier Chavez
@@ -15,4 +16,9 @@ public class Ship extends GameObject implements Shooter<Laser>{
         return new Laser(x, y, LASER_WIDTH, LASER_HEIGHT);
     }
 
+    public void paint(Graphics g) {
+
+        g.setColor(Color.white);
+        g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    }
 }
