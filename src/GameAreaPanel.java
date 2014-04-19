@@ -15,7 +15,10 @@ public class GameAreaPanel extends JPanel implements ActionListener {
     private InvadersGameFrame gameFrame;
     private Timer timer;
     Random rand = new Random();
-
+    static private Missile curM = null;
+    static private boolean isMissileFiring = false;
+    static private boolean isLaserFiring = false;
+    static private Laser curr = null;
     /*
         dependency injection
     */
@@ -62,7 +65,6 @@ public class GameAreaPanel extends JPanel implements ActionListener {
 
         }
         if(curM != null){
-            System.out.println("curM = " + curM.toString());
             curM.paint(g);
         }
     }
@@ -92,7 +94,11 @@ public class GameAreaPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() instanceof Timer){
-            fireAlien(rand.nextInt(aliens.size()));
+            int s = rand.nextInt(aliens.size());
+            if (s%3 ==0 && s%5 ==0){
+                fireAlien(s);
+            }
+
 
             if(!reverse) {
                 for (int i = 0; i < aliens.size(); i++) {
@@ -108,9 +114,6 @@ public class GameAreaPanel extends JPanel implements ActionListener {
                         break;
                     }
                     x += xDir;
-
-                    //                System.out.println("xDir = " + xDir);
-                    //                System.out.println("x = " + x);
 
                     aliens.add(i, new Alien(x, a.getY(), a.getWidth(), a.getHeight()));
 
@@ -149,11 +152,10 @@ public class GameAreaPanel extends JPanel implements ActionListener {
         ship = new Ship(ship.getX()-20, ship.getY(), ship.getWidth(), ship.getHeight());
         repaint();
     }
-    static private boolean isFiring = false;
-    static private Laser curr = null;
+
     public void fireShip(){
         // if still firing then do not continue;
-        if (isFiring){
+        if (isLaserFiring){
             return;
         }
         // fire the ships gun
@@ -164,7 +166,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
                 // while the missle is not null and still on the board keep moving it upward
                 while (curr != null && curr.getY() > 0-GameData.MISSILE_HEIGHT){
                     // we are firing missle set checker
-                    isFiring  = true;
+                    isLaserFiring = true;
                     // move the missle
                     curr = new Laser(curr.getX(), curr.getY()-GameData.LASER_SPEED,curr.getWidth(),curr.getHeight());
                     // check to see if we hit any aliens on the way
@@ -173,6 +175,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
                         if(curr.intersects(aliens.get(i))){
                             // if we hit one we need to remove it
                             aliens.remove(i);
+
                             // also remove the missle
                             curr = null;
                             // no need to continue
@@ -181,6 +184,10 @@ public class GameAreaPanel extends JPanel implements ActionListener {
 
 
                             gameFrame.addToScore(10);
+                            if(aliens.size() == 0){
+                                timer.stop();
+                                System.out.println("You Won");
+                            }
                             break;
                         }
 
@@ -196,7 +203,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
                     }
                 }
                 // we exited while either hit something or no longer on board
-                isFiring = false;
+                isLaserFiring = false;
                 // no longer need missle
                 curr = null;
             }
@@ -205,8 +212,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
         thread.start();
     }
 
-    static private Missile curM = null;
-    static private boolean isMissileFiring = false;
+
 
     private void fireAlien(int i){
 
@@ -214,7 +220,6 @@ public class GameAreaPanel extends JPanel implements ActionListener {
             return;
         }
         curM = aliens.get(i).fire();
-        System.out.println("i = " + i);
 
         // using a thread we will move the missle across the screen
         Thread thread = new Thread(){

@@ -15,6 +15,7 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
     private JLabel scoreLabel, aliensLabel, livesLabel;
     private int score, lives, aliensKilled;
 
+
     InvadersGameFrame(){
         init();
     }
@@ -26,13 +27,21 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
 
     public void setLives(int lives){
         this.lives = lives;
-        livesLabel.setText("Live: " + this.lives);
+        livesLabel.setText("Lives: " + this.lives);
+        if(lives == 0){
+            lives = 3;
+            livesLabel.setText("Lives: " + this.lives);
+            gameArea.stop();
+            isRunning = false;
+        }
     }
 
     public void setAliensKilled(int aliensKilled){
         this.aliensKilled = aliensKilled;
         aliensLabel.setText("Aliens Killed: " + this.aliensKilled);
     }
+
+
     public int getScore() {
         return score;
     }
