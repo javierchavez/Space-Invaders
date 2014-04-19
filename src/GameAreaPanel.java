@@ -13,6 +13,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
     private List<Alien> aliens;
     private Ship ship;
     private InvadersGameFrame gameFrame;
+    private Timer timer;
 
     /*
         dependency injection
@@ -22,7 +23,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
         init();
         initGameData();
 
-        Timer timer = new Timer(1000, this);
+        timer = new Timer(1000, this);
         timer.setInitialDelay(0);
         timer.start();
     }
@@ -33,9 +34,19 @@ public class GameAreaPanel extends JPanel implements ActionListener {
         this.aliens = aliens;
         this.ship = ship;
 
-        Timer timer = new Timer(1000, this);
+        timer = new Timer(1000, this);
         timer.setInitialDelay(0);
         timer.start();
+    }
+
+    public void stop(){
+        timer.stop();
+        this.removeAll();
+    }
+
+    public void start(){
+        timer.start();
+        this.updateUI();
     }
 
     @Override

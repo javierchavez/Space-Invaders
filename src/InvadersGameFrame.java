@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
  * @author Javier Chavez
  */
 public class InvadersGameFrame extends JFrame implements KeyListener {
-    private boolean isRunning = false;
+    private static boolean isRunning = false;
     private GameAreaPanel gameArea = new GameAreaPanel(this);
     private JButton startPauseButton;
     private JLabel scoreLabel, aliensLabel, livesLabel;
@@ -17,7 +17,6 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
 
     InvadersGameFrame(){
         init();
-
     }
 
     public void addToScore(int score) {
@@ -58,6 +57,7 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
         rightPanel.setLayout(new GridLayout(3,1));
         rightPanel.setBackground(rightPanelColor);
 
+
         // this will hold the number values
         JPanel infoLabels = new JPanel();
         infoLabels.setLayout(new GridLayout(6,1,0,0));
@@ -77,15 +77,18 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
         startPauseButton.setBackground(Color.decode("#b2f3b2"));
         startPauseButton.setForeground(Color.white);
         startPauseButton.setOpaque(true);
+        startPauseButton.setFocusable(false);
 
         rightPanel.setPreferredSize(new Dimension(GameData.GAME_BOARD_HEIGHT,GameData.GAME_BOARD_WIDTH));
         startPauseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 startPauseButton.setText(isRunning ? "Start" : "Pause");
                 if(!isRunning) {
+                    gameArea.start();
                     isRunning = true;
                     startPauseButton.setBackground(Color.decode("#ff4d4d"));
                 } else {
+                    gameArea.stop();
                     isRunning = false;
                     startPauseButton.setBackground(Color.decode("#b2f3b2"));
                 }
@@ -109,6 +112,7 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
         controlPanel.setBackground(rightPanelColor);
 
 
+
         // add all labels to panel
         infoLabels.add(scoreLabel);
         infoLabels.add(aliensLabel);
@@ -125,6 +129,7 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
         setFocusable(true);
         addKeyListener(this);
         this.requestFocus();
+        gameArea.stop();
 
     }
 
@@ -135,14 +140,14 @@ public class InvadersGameFrame extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && isRunning){
             System.out.println("right");
             gameArea.moveShipRight();
 
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && isRunning){
             gameArea.moveShipLeft();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_SPACE){
+        else if (e.getKeyCode() == KeyEvent.VK_SPACE && isRunning){
             System.out.println("space");
             gameArea.fireShip();
         }
