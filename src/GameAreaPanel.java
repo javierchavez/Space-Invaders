@@ -14,6 +14,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
     private Ship ship;
     private InvadersGameFrame gameFrame;
     private Timer timer;
+    Random rand = new Random();
 
     /*
         dependency injection
@@ -60,6 +61,10 @@ public class GameAreaPanel extends JPanel implements ActionListener {
             curr.paint(g);
 
         }
+        if(curM != null){
+            System.out.println("curM = " + curM.toString());
+            curM.paint(g);
+        }
     }
 
     private void init() {
@@ -87,12 +92,16 @@ public class GameAreaPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() instanceof Timer){
+            fireAlien(rand.nextInt(aliens.size()));
+
             if(!reverse) {
                 for (int i = 0; i < aliens.size(); i++) {
                     Alien a = aliens.remove(i);
                     int x = a.getX();
 
-                    if (x + xDir + a.getWidth() > GameData.GAME_BOARD_WIDTH*2-a.getWidth()) {
+
+
+                    if (x + xDir + a.getWidth() > GameData.GAME_BOARD_WIDTH*4-a.getWidth()) {
                         xDir = -xDir;
                         reverse = true;
                         aliens.add(i, new Alien(x, a.getY(), a.getWidth(), a.getHeight()));
@@ -157,7 +166,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
                     // we are firing missle set checker
                     isFiring  = true;
                     // move the missle
-                    curr = new Laser(curr.getX(), curr.getY()-GameData.MISSILE_SPEED,curr.getWidth(),curr.getHeight());
+                    curr = new Laser(curr.getX(), curr.getY()-GameData.LASER_SPEED,curr.getWidth(),curr.getHeight());
                     // check to see if we hit any aliens on the way
                     for (int i = 0; i < aliens.size(); i++) {
 
@@ -191,6 +200,58 @@ public class GameAreaPanel extends JPanel implements ActionListener {
                 // no longer need missle
                 curr = null;
             }
+        };
+
+        thread.start();
+    }
+
+    static private Missile curM = null;
+    static private boolean isMissileFiring = false;
+
+    private void fireAlien(int i){
+
+        if (isMissileFiring){
+            return;
+        }
+        curM = aliens.get(i).fire();
+        System.out.println("i = " + i);
+
+        // using a thread we will move the missle across the screen
+        Thread thread = new Thread(){
+            public void run(){
+                System.out.println("Start");
+                while (curM != null && curM.getY() < GameData.GAME_BOARD_HEIGHT*4+curM.getHeight()){
+                    isMissileFiring = true;
+                    curM = new Missile(curM.getX(), curM.getY()+GameData.MISSILE_SPEED, curM.getWidth(), curM.getHeight());
+
+
+                        if(curM.intersects(ship)){
+                            curM = null;
+                            int lives = gameFrame.getLives();
+
+                            gameFrame.setLives(lives-1);
+                            break;
+                        }
+
+
+                    // repaint the board
+                    repaint();
+
+                    try {
+                        // sleep the thread that way we can the missle move
+                        Thread.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // we exited while either hit something or no longer on board
+                isMissileFiring = false;
+                // no longer need missle
+                curM = null;
+                System.out.println("end");
+            }
+
+
         };
 
         thread.start();
