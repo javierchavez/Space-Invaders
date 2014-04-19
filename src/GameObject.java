@@ -51,16 +51,16 @@ public abstract class GameObject implements Object2D, GameData{
     public boolean isOutOfBounds() {
 
 
-        if (rectangle.x < 0 || rectangle.x > GAME_BOARD_WIDTH ||
-            rectangle.y < 0 || rectangle.y > GAME_BOARD_HEIGHT) {
+        if (rectangle.x < 0 || rectangle.x > GAME_BOARD_WIDTH*2 ||
+            rectangle.y < 0 || rectangle.y > GAME_BOARD_HEIGHT*2) {
             return true;
         }
 
         int totalWidth = rectangle.x + rectangle.width;
         int totalHeight = rectangle.y + rectangle.height;
 
-        if (totalWidth < 0 || totalWidth > GAME_BOARD_WIDTH ||
-           totalHeight < 0 || totalHeight > GAME_BOARD_HEIGHT) {
+        if (totalWidth < 0 || totalWidth > GAME_BOARD_WIDTH*2 ||
+           totalHeight < 0 || totalHeight > GAME_BOARD_HEIGHT*2) {
             return true;
         }
 

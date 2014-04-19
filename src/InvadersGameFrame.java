@@ -2,34 +2,54 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * @author Javier Chavez
  */
-public class InvadersGameFrame extends JFrame{
+public class InvadersGameFrame extends JFrame implements KeyListener {
     private boolean isRunning = false;
-    private GameAreaPanel gameArea = new GameAreaPanel();
+    private GameAreaPanel gameArea = new GameAreaPanel(this);
     private JButton startPauseButton;
     private JLabel scoreLabel, aliensLabel, livesLabel;
+    private int score, lives, aliensKilled;
 
     InvadersGameFrame(){
         init();
+
     }
-    /*
-    public void setScore(int score) {
-        scoreLabel.setText("Score: " + score);
+
+    public void addToScore(int score) {
+        this.score += score;
+        scoreLabel.setText("Score: " + this.score);
     }
 
     public void setLives(int lives){
-        livesLabel.setText("Live: " + lives);
+        this.lives = lives;
+        livesLabel.setText("Live: " + this.lives);
     }
 
     public void setAliensKilled(int aliensKilled){
-        aliensLabel.setText("Aliens Killed: " + aliensKilled);
+        this.aliensKilled = aliensKilled;
+        aliensLabel.setText("Aliens Killed: " + this.aliensKilled);
     }
-    */
-    private void init(){
+    public int getScore() {
+        return score;
+    }
 
+    public int getLives(){
+        return lives;
+    }
+
+    public int getAliensKilled(){
+        return aliensKilled;
+    }
+
+    private void init(){
+        score =0;
+        lives =3;
+        aliensKilled =0;
         Color rightPanelColor = Color.white;
         Font f = new Font("Dialog", Font.BOLD, 20);
 
@@ -45,11 +65,11 @@ public class InvadersGameFrame extends JFrame{
 
 
         //create labels
-        scoreLabel = new JLabel("Score: TBD");
+        scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(f);
-        aliensLabel = new JLabel("Aliens Killed: TBD");
+        aliensLabel = new JLabel("Aliens Killed: " + aliensKilled);
         aliensLabel.setFont(f);
-        livesLabel = new JLabel("Lives: TBD");
+        livesLabel = new JLabel("Lives: " + lives);
         livesLabel.setFont(f);
 
         startPauseButton = new JButton("Start");
@@ -102,5 +122,34 @@ public class InvadersGameFrame extends JFrame{
         setSize(GameData.GAME_BOARD_WIDTH*4, GameData.GAME_BOARD_HEIGHT*4);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setFocusable(true);
+        addKeyListener(this);
+        this.requestFocus();
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+            System.out.println("right");
+            gameArea.moveShipRight();
+
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+            gameArea.moveShipLeft();
+        }
+        else if (e.getKeyCode() == KeyEvent.VK_SPACE){
+            System.out.println("space");
+            gameArea.fireShip();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

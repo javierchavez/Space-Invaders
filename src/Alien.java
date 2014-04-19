@@ -1,13 +1,19 @@
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Javier Chavez
  */
 
-public class Alien extends GameObject implements Shooter<Missile>{
+public class Alien extends GameObject implements Shooter<Missile> {
+    private int xDir, yDir;
+
 
     public Alien(int x, int y, int width, int height) {
         super(x,y,width,height);
+        xDir = 1;
     }
 
     @Override
@@ -25,4 +31,6 @@ public class Alien extends GameObject implements Shooter<Missile>{
 //        g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
         g.fill3DRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, true);
     }
+
+
 }
