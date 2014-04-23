@@ -53,6 +53,13 @@ public class GameAreaPanel extends JPanel implements ActionListener {
         this.updateUI();
     }
 
+    public void restart(){
+        timer.start();
+        init();
+        initGameData();
+
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -185,8 +192,10 @@ public class GameAreaPanel extends JPanel implements ActionListener {
 
                             gameFrame.addToScore(10);
                             if(aliens.size() == 0){
-                                timer.stop();
+                                restart();
                                 System.out.println("You Won");
+                                timer.stop();
+                                gameFrame.
                             }
                             break;
                         }
