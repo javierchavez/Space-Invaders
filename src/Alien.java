@@ -1,7 +1,11 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Javier Chavez
@@ -14,6 +18,7 @@ public class Alien extends GameObject implements Shooter<Missile> {
     public Alien(int x, int y, int width, int height) {
         super(x,y,width,height);
         xDir = 1;
+        setImage("");
     }
 
     @Override
@@ -26,11 +31,25 @@ public class Alien extends GameObject implements Shooter<Missile> {
 
     public void paint(Graphics g) {
         //this is strictly for aesthetics
-
-        g.setColor(Color.green);
-//        g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-        g.fill3DRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, true);
+        if (image!= null){
+            g.drawImage(image, rectangle.x, rectangle.y, getWidth(), getHeight(), null);
+        }else{
+            g.setColor(Color.green);
+            g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        }
     }
 
+    private BufferedImage image;
+
+    public void setImage(String imageName) {
+        // Using ClassLoader can find a resource in jar, too.
+        ClassLoader cl = getClass().getClassLoader();
+        InputStream in = cl.getResourceAsStream("si_large.jpg");
+        try {
+            image = ImageIO.read(in);
+        } catch (IOException ex) {
+            System.err.println("Error loading: " + imageName);
+        }
+    }
 
 }

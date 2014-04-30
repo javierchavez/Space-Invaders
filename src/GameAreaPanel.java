@@ -195,7 +195,7 @@ public class GameAreaPanel extends JPanel implements ActionListener {
                                 restart();
                                 System.out.println("You Won");
                                 timer.stop();
-                                gameFrame.
+//                                gameFrame.
                             }
                             break;
                         }

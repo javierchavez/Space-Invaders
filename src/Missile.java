@@ -9,6 +9,8 @@ public class Missile extends GameObject {
 
         super(x,y,width,height);
     }
+
+
     public void paint(Graphics g) {
 
         g.setColor(Color.white);
